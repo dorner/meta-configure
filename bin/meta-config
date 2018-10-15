@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+
+let loaded = false;
+
+if (loaded) return process.kill();
+
+const program = require('commander');
+const debug = require('debug')('meta-config');
+const find = require('find-file-recursively-up');
+
+program
+  .command('config', 'Configure meta')
+  .parse(process.argv);
+
+loaded = true;
+
+const option = process.argv[1];
+let value = JSON.parse(process.argv[2]);
+
+if (!option || !value) {
+  console.error("Usage: meta config {option} {value}")
+}
+
+find('.meta', (err, metafilePath) => {
+  if (err) throw err;
+  const fileContents = fs.readFileSync(metafilePath).toString();
+  let metaJson;
+
+  try {
+    metaJson = JSON.parse(fileContents);
+  } catch (err) {
+    console.warn(`Error parsing .meta file at ${metafilePath}`);
+    if (err) throw err;
+  }
+
+  if (!metaJson.options) metaJson.options = {};
+  metaJson.options[option] = value;
+  fs.writeFileSync(metafilePath, JSON.stringify(metaJson, null, '  '));
+  console.log(`Set option ${option} to ${value} in file ${metafilePath}`)
+});
+
+/*
+usage: config option value
+
+Set the given option to the provided value.*/
