@@ -7,6 +7,7 @@ if (loaded) return process.kill();
 const program = require('commander');
 const debug = require('debug')('meta-config');
 const find = require('find-file-recursively-up');
+const fs = require('fs');
 
 program
   .command('config', 'Configure meta')
@@ -14,8 +15,10 @@ program
 
 loaded = true;
 
-const option = process.argv[1];
-let value = JSON.parse(process.argv[2]);
+const option = process.argv[2];
+let value = ['true', 'false'].includes(process.argv[3]) ?
+  JSON.parse(process.argv[3]) :
+  process.argv[3];
 
 if (!option || !value) {
   console.error("Usage: meta config {option} {value}")
