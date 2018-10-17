@@ -32,6 +32,6 @@
     "commander": "^2.9.0",
     "debug": "^2.3.3",
     "meta-exec": "0.0.0",
-    "find-file-recursively-up": "0.0.0"
+    "get-meta-file": "0.0.5"
   }
 }
